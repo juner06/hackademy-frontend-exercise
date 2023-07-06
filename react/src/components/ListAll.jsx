@@ -1,40 +1,40 @@
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react"
 import "./App.css";
 import { Container, Form, Button } from "react-bootstrap";
 
 export function ListAll() {
-    const [expenses, setExpenses] = React.useState([
+    const [expenses, setExpenses] = useState([
         {
-          "id": 1,
-          "description": "Rent",
-          "amount": 1000
-        },
-        {
-          "id": 2,
-          "description": "Groceries",
-          "amount": 200
-        },
-        {
-          "id": 3,
-          "description": "Utilities",
-          "amount": 150
-        },
-        {
-          "id": 4,
-          "description": "Transportation",
-          "amount": 100
-        },
-        {
-          "id": 5,
-          "description": "Entertainment",
-          "amount": 50
-        },
-       ]);
-    const [total, setTotal] = React.useState("0.00");
-    const [idToDelete, setIdToDelete] = React.useState(0);
+            "id": 1,
+            "description": "Rent",
+            "amount": 1000
+          },
+          {
+            "id": 2,
+            "description": "Groceries",
+            "amount": 200
+          },
+          {
+            "id": 3,
+            "description": "Utilities",
+            "amount": 150
+          },
+          {
+            "id": 4,
+            "description": "Transportation",
+            "amount": 100
+          },
+          {
+            "id": 5,
+            "description": "Entertainment",
+            "amount": 50
+          }
+    ]);
+    const [total, setTotal] = useState("0.00");
+    const [idToDelete, setIdToDelete] = useState(0);
 
     // pag nagload yung component
-    React.useEffect(function () {
+    useEffect(function () {
         loadExpenses();
         localStorage.setItem("expenses", JSON.stringify(expenses));
     }, []);
@@ -42,7 +42,9 @@ export function ListAll() {
     const handleSave = (e) => {
         e.preventDefault();
         if (e.target.description.value.trim() === '' || e.target.amount.value.trim() === '') {
-            alert('Please add a text and amount');
+            alert('Please add a description and amount');
+        } else if (!isNaN(parseInt(e.target.description.value))){
+            alert('Description cannot be a number');
         } else {
         const description = e.target.description.value;
         const amount = e.target.amount.value;
@@ -70,25 +72,9 @@ export function ListAll() {
         }
     }
 
-    /* const handleDelete = (idToDelete) => {
-        setIdToDelete(idToDelete);
-        const expenseFromStorage = localStorage.getItem("expenses");
-        if (expenseFromStorage != null) {
-            var expenseJsonData = JSON.parse(expenseFromStorage);
-            var filteredExpenses = expenseJsonData.filter((expense) =>
-                expense.id !== idToDelete
-            );
-            var filteredExpensesString = JSON.stringify(filteredExpenses);
-            localStorage.setItem("expenses", filteredExpensesString);
-            alert("Deleted!");
-            loadExpenses();
-        }
-    } */
-
-
     const loadExpenses = () => {
         const expensesFromStorage = localStorage.getItem("expenses");
-        if (expensesFromStorage != null) {
+        if (expensesFromStorage !== null) {
             const jsonExpenses = JSON.parse(expensesFromStorage);
             setExpenses(jsonExpenses);
 
@@ -133,15 +119,22 @@ export function ListAll() {
                     <h3 className="text-center">Total Expenses PHP {total}</h3>
                 </div>
                 <div>
-                    {expenses.map((expense, index) =>  
-                        <ul key={index} className="list">
-                            <li className={expense.amount>100 ? "expenseExceeds" : "expenseNotExceed"}>{expense.description}<span>${Math.abs(
-                                expense.amount
-                            )}</span>{/* <Button className="delete-btn" variant="danger" onClick={() => handleDelete(expense.id)}>x</Button> */}</li>
-                        </ul>
-                    )}
+                    <ExpenseContainer data={expenses} />
                 </div>
             </Container>
         </>
     )
+}
+
+function ExpenseContainer(props) {
+
+    if (props.data.length > 0 ) {
+        const items = useMemo(() => props.data.map((expense, index) =>      
+        <li key={index} className={expense.amount>100 ? "expenseExceeds" : "expenseNotExceed"}>
+            {expense.description}<span>{expense.amount}</span>
+        </li>
+        ), [props]);
+        return <ul className="list">{items}</ul>;
+    } else return <p>No Expense written</p>;
+    
 }
