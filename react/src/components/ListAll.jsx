@@ -1,34 +1,34 @@
-import React, { useState, useEffect, useMemo } from "react"
-import "./App.css";
+import React, { useState, useEffect, useMemo } from "react";
+import "/src/App.css";
 import { Container, Form, Button } from "react-bootstrap";
 
 export function ListAll() {
     const [expenses, setExpenses] = useState([
         {
-            "id": 1,
-            "description": "Rent",
-            "amount": 1000
-          },
-          {
-            "id": 2,
-            "description": "Groceries",
-            "amount": 200
-          },
-          {
-            "id": 3,
-            "description": "Utilities",
-            "amount": 150
-          },
-          {
-            "id": 4,
-            "description": "Transportation",
-            "amount": 100
-          },
-          {
-            "id": 5,
-            "description": "Entertainment",
-            "amount": 50
-          }
+        "id": 1,
+        "description": "Rent",
+        "amount": 1000
+        },
+        {
+        "id": 2,
+        "description": "Groceries",
+        "amount": 200
+        },
+        {
+        "id": 3,
+        "description": "Utilities",
+        "amount": 150
+        },
+        {
+        "id": 4,
+        "description": "Transportation",
+        "amount": 100
+        },
+        {
+        "id": 5,
+        "description": "Entertainment",
+        "amount": 50
+        }
     ]);
     const [total, setTotal] = useState("0.00");
     const [idToDelete, setIdToDelete] = useState(0);
@@ -134,7 +134,7 @@ function ExpenseContainer(props) {
             {expense.description}<span>{expense.amount}</span>
         </li>
         ), [props]);
-        return <ul className="list">{items}</ul>;
+        return <ul data-testid={"exp"} className="list">{items}</ul>;
     } else return <p>No Expense written</p>;
     
 }
